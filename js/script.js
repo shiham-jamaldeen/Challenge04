@@ -95,14 +95,26 @@ function displayResult(chosenAnsValue) {
 }
 
 function goToNextQuestion() {
-  //increase the quiz count
+  // //increase the quiz count
 
-  //questionPosition = questionPosition + 1;
-  console.log("question coun before: " + questionPosition);
-  //check if the question count has reached the end of the quiz
+  // //questionPosition = questionPosition + 1;
+  // console.log("question coun before: " + questionPosition);
+  // //check if the question count has reached the end of the quiz
+  // if (questionPosition === arrayLength) {
+  //   return;
+  // } else if (questionPosition < arrayLength) {
+  //   //console.log(questionPosition);
+  //   //console.log("question array length: " + arrayLength);
+  //   questionPosition = questionPosition + 1;
+  //   console.log("question count after: " + questionPosition);
+  //   title.textContent = "";
+  //   ol.textContent = "";
+  //   result.textContent = "";
+  //   displayQuestion();
+  // } //else (questionPosition === arrayLength) return;
   if (questionPosition === arrayLength) {
-    return;
-  } else if (questionPosition < arrayLength) {
+    displayScore();
+  } else {
     //console.log(questionPosition);
     //console.log("question array length: " + arrayLength);
     questionPosition = questionPosition + 1;
@@ -111,7 +123,7 @@ function goToNextQuestion() {
     ol.textContent = "";
     result.textContent = "";
     displayQuestion();
-  } //else (questionPosition === arrayLength) return;
+  }
 }
 function displayScore() {
   //clear the page
