@@ -29,6 +29,11 @@ const questions = [
       "4. myFunction()",
     ],
   },
+  {
+    question: "Demo question",
+    correctAnswer: 3,
+    options: ["1. Option 00", "2. Option 01", "3. Option 02", "4. Option 03"],
+  },
 ];
 
 let arrayLength = questions.length;
@@ -84,13 +89,13 @@ function displayResult(chosenAnsValue) {
     result.textContent = "Awsome: You got it correct!";
     result.className = "answerPanel";
     answer.append(result);
-    setTimeout(goToNextQuestion, 2000);
+    const quizTimeOut = setTimeout(goToNextQuestion, 2000);
     //finalScore++;
   } else {
     result.textContent = "Sorry: Your answer is incorrect";
     result.className = "answerPanel";
     answer.append(result);
-    setTimeout(goToNextQuestion, 2000);
+    const quizTimeOut = setTimeout(goToNextQuestion, 2000);
   }
 }
 
