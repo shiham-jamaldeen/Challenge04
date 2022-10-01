@@ -1,26 +1,16 @@
 var startButton = document.getElementById("button-start");
 var quizArea = document.getElementById("questionArea"); //for inital content on the start page
-var generatedQuestions = document.getElementById("dynamicQuestions"); // for questions generated
+var generatedQuestions = document.getElementById("questionContainer"); // for questions generated
+const title = document.getElementById("questionTitle");
+const ol = document.getElementById("questionOptions");
+var answer = document.getElementById("answerContainer");
+var result = document.getElementById("results");
+var scoreBoard = document.getElementById("scoresContainer");
+var scoreTitle = document.getElementById("scoreTitle");
 
-function startQuiz(event) {
-  event.preventDefault();
-  quizArea.textContent = "";
-  //displayQuestion01();
-  displayQuestions();
-}
-
-function handleButtonClick() {
-  //console.log(handleButtonClick.name);
-
-  var displayAnswer = document.getElementById("answerArea");
-  displayAnswer.textContent = "Sorry: Wrong answer";
-  //displayAnswer.className = "answerPanel";
-  displayAnswer.append(displayAnswer);
-}
-//answer 0 as an element
 const questions = [
   {
-    question: "Q1. Inside which HTML element do you write JavaScript?",
+    question: "Inside which HTML element do you write JavaScript?",
     correctAnswer: 2,
     options: [
       "1. <scripting> </scripting>",
@@ -30,140 +20,112 @@ const questions = [
     ],
   },
   {
-    question: "Q2. How do you create a function in Javascript?",
-    correctAnswer: 2,
+    question: "How do you create a function in Javascript?",
+    correctAnswer: 1,
     options: [
       "1. function = myFunction()",
-      "2.function myFunction()",
+      "2. function myFunction()",
       "3. function: myFunction()",
       "4. myFunction()",
     ],
   },
 ];
 
-function displayQuestion() {
+let arrayLength = questions.length;
+let questionPosition = 0;
+//let finalScore = 0;
 
-  
-  //define questions array
-  // let question1 = [
-  //   { Q: "Q1. Inside which HTML element do you write JavaScript?" },
-  //   { A1: "1. <scripting> </scripting>" },
-  //   { A1: "2. <javascripting> </javascripting>" },
-  //   { A1: "3. <script> </script>", correct: true },
-  //   { A1: "4. <js> </js>" },
-  // ];
-  // let question2 = [
-  //   { Q: "Q2. How do you create a function in Javascript?" },
-  //   { A1: "1. function = myFunction()" },
-  //   { A1: "2. function myFunction()" },
-  //   { A1: "3. function: myFunction()", correct: true },
-  //   { A1: "4. myFunction()" },
-  // ];
+function startQuiz(event) {
+  event.preventDefault();
+  quizArea.remove();
+  //displayQuestion01();
+  displayQuestion();
 
-  // var questionElement = document.getElementById("questionDisplayed");
-  // var answerElementOL = document.getElementById("answerDisplayed");
-  // //var answerElementLI = document.createElement("li");
-  // questionElement.textContent = question1[0].Q;
-  // generatedQuestions.append(questionElement);
-
-  // for (i = 1; i < question1.length; i++) {
-  //   //console.log("Element " + i + " of array: " + question1[i].A1);
-  //   var answerElementLI = document.createElement("li");
-  //   var answerX = document.getElementById("answerDisplayed");
-  //   answerElementLI.textContent = question1[i].A1; //display the value only
-  //   answerElementLI.setAttribute("id", i); //assign an id to the <LI> element,
-  //   answerElementLI.className = "button";
-
-  //   answerX.appendChild(answerElementLI);
-  //   //check for key clicks and which element is clicked
-  //   answerElementLI.addEventListener("click", (e) => {
-  //console.log("keypressed: " + e.target.id); //display the key pressed
-  //check what is pressed
-  //if the key pressed == True flag then
-  //display ANSWER CORRECT
-  //SCORE++
-  //Else display ANSWER INCORRECT
-  //display ANSWER WRONG
-  //TIMELEFT--
-  //display next question
-
-  //suggestion from Matt W:
-  //--------------------------
-  // loop over questions object
-  // for each question, set the question title
-  // for each option in this question, set the button text etc
-  // add an event listener that looks at question.correctAnswer value and compares it to the index of the one that was one clicked to determine if it was correct.
-  
-  //});
+  //use setInterval and in the function minus 1 second from the original count (60 ) at every 1000 milisecond
 }
-//}
+//this is the counter for counting the question that should be displayed on the webpage
 
-//index = index + 1;
+function displayQuestion() {
+  //display title of question
+  let h2Title = questions[questionPosition].question;
+  title.innerText = h2Title;
+  //title.append(questions[questionPosition].question);
+  //console.log("Q: " + questions[questionPosition].question);
+  //display the options (answers) of the question
+  //get length of options
+  let answerOptions = 4;
+  for (i = 0; i < 4; i++) {
+    var answerElementLI = document.createElement("li");
+    //console.log(questions[questionPosition].options[i]);
+    answerElementLI.innerText = questions[questionPosition].options[i]; //display the answer options only
+    answerElementLI.setAttribute("id", i); //assign an id to the <LI> element,
+    answerElementLI.className = "button";
+    ol.appendChild(answerElementLI);
+  }
 
-/*        function displayQuestion01() {
-          //Display Question 01
-          var question1 = document.createElement("h2");
-          question1.textContent =
-            "Q1.Inside which HTML element do you write JavaScript code?";
-          quizArea.append(question1);
-          //create OL element
+  //var Button = document.getElementById("button-next");
 
-          var unorderedList = document.createElement("ol");
-          unorderedList.setAttribute("id", "ol-answerlist-1");
-          quizArea.append(unorderedList);
+  // start quiz: renderQuestion()
+  // click on an answer: goToNextQuestion() which then automatically calls -> renderQuestion()
+  // answerElementLI.addEventListener("click", goToNextQuestion);
+  ol.addEventListener("click", (event) => {
+    console.log("key pressed: " + event.target.id);
+    // console.log("NodeName: ", event.target.nodeName);
+    // let keyPressed = event.target.id;
+    let chosenAnsValue = event.target.innerText;
+    //console.log("Chosen Value: ", chosenAnsValue);
+    displayResult(chosenAnsValue);
+  });
+}
+function displayResult(chosenAnsValue) {
+  if (questionPosition >= arrayLength) return; // when the last question is reached clear the setInterval
+  let correctAns = questions[questionPosition].correctAnswer;
+  if (chosenAnsValue == questions[questionPosition].options[correctAns]) {
+    result.textContent = "Awsome: You got it correct!";
+    result.className = "answerPanel";
+    answer.append(result);
+    setTimeout(goToNextQuestion, 2000);
+    //finalScore++;
+  } else {
+    result.textContent = "Sorry: Your answer is incorrect";
+    result.className = "answerPanel";
+    answer.append(result);
+    setTimeout(goToNextQuestion, 2000);
+  }
+}
 
-          var answerButton1 = document.createElement("li");
-          answerButton1.textContent = "1. <scripting></scripting>";
-          answerButton1.className = "button";
-          answerButton1.setAttribute("id", "element-1");
-          quizArea.appendChild(answerButton1);
+function goToNextQuestion() {
+  //increase the quiz count
 
-          var answerButton2 = document.createElement("li");
-          answerButton2.textContent = "2. <JavaScripting></JavaScripting>";
-          answerButton2.className = "button";
-          answerButton2.setAttribute("id", "element-2");
-          quizArea.append(answerButton2);
-
-          var answerButton3 = document.createElement("li");
-          answerButton3.textContent = "3. <script></script>";
-          answerButton3.className = "button";
-          answerButton3.setAttribute("id", "element-3");
-          quizArea.append(answerButton3);
-
-          var answerButton4 = document.createElement("li");
-          answerButton4.textContent = "4. <JS></JS>";
-          answerButton4.setAttribute("id", "element-4");
-          answerButton4.className = "button";
-          quizArea.append(answerButton4);
-
-          //listen for keypress
-
-          var y = document.getElementById("ol-answerlist-1");
-          y.addEventListener("click", function () {
-            var z = JSON.stringify(y);
-            console.log(z);
-            if (z === "element-3") {
-              var displayAnswer = document.createElement("div");
-              displayAnswer.textContent = "Awsome: You got it correct!";
-              displayAnswer.className = "answerPanel";
-              quizArea.append(displayAnswer);
-            } else {
-              var displayAnswer = document.createElement("div");
-              displayAnswer.textContent = "Sorry: Wrong answer";
-              displayAnswer.className = "answerPanel";
-              quizArea.append(displayAnswer);
-            }
-          });
-
-          //console.log ("element:" + JSON.stringify(answer) + "contents of li: " + JSON.stringify(liAnswer2));
-
-          //add the li and some elements
-
-          //stylise the li
-
-          // console.log ("this is the first element:", quizArea);
-  //  console.log ("this is the second element:",question);
-}*/
+  //questionPosition = questionPosition + 1;
+  console.log("question coun before: " + questionPosition);
+  //check if the question count has reached the end of the quiz
+  if (questionPosition === arrayLength) {
+    return;
+  } else if (questionPosition < arrayLength) {
+    //console.log(questionPosition);
+    //console.log("question array length: " + arrayLength);
+    questionPosition = questionPosition + 1;
+    console.log("question count after: " + questionPosition);
+    title.textContent = "";
+    ol.textContent = "";
+    result.textContent = "";
+    displayQuestion();
+  } //else (questionPosition === arrayLength) return;
+}
+function displayScore() {
+  //clear the page
+  generatedQuestions.remove();
+  answerContainer.remove();
+  //finalScore = finalScore - 1;
+  //generate the content
+  scoreTitle.textContent = "All Done";
+  scoreBoard.append(scoreTitle);
+  var scoreText = document.createElement("blockquote");
+  scoreText.innerHTML = "Your final score is: " + finalScore;
+  console.log("Final score: " + finalScore);
+  scoreBoard.append(scoreText);
+}
 
 // Attaches event listener to button
 startButton.addEventListener("click", startQuiz);
