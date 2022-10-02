@@ -1,15 +1,24 @@
-const splashScreenStartButton = document.getElementById("button-start");
+var splashScreenStartButton = document.getElementById("button-start");
 var splashScreen = document.getElementById("splashScreenContainer"); //for inital content on the start page
 var generatedQuestions = document.getElementById("questionContainer"); // for questions generated
-const title = document.getElementById("questionTitle");
-const ol = document.getElementById("questionOptions");
+var title = document.getElementById("questionTitle");
+var ol = document.getElementById("questionOptions");
 var answer = document.getElementById("answerContainer");
 var result = document.getElementById("results");
-var scoreBoard = document.getElementById("scoresContainer");
+var scoreBoard = document.querySelector("#scoresContainer");
 var scoreTitle = document.getElementById("scoreTitle");
-var displayScoreContainer = document.getElementById("displayScoresContainer");
+var scoreText = document.getElementById("finalScorePlaceholder");
+var displayScoreContainer = document.getElementById("highScoresContainer");
 var displayScoreOL = document.getElementById("scoreBoard");
 var displayScoreTitle = document.getElementById("highScoresDisplay");
+var inputScores = document.createElement("input");
+var label = document.createElement("label");
+var submitScoreButton = document.createElement("button");
+var scoreElementLI = document.createElement("li");
+var clearScoresButton = document.createElement("button");
+var restartQuizButton = document.createElement("button");
+var timeLeftContainer = document.getElementById("timerContainer");
+var timeRemaining = document.getElementById("timeLeftPlaceholder");
 
 const questions = [
   {
@@ -57,31 +66,26 @@ const questions = [
 let arrayLength = questions.length;
 let questionPosition = 0;
 let finalScore = 0;
-let h2Title = questions[questionPosition].question;
-//let answerOptions = 4;
-
-//var userInitials = " ";
+let timeLeft = 60;
 
 function startQuiz(event) {
   event.preventDefault();
-
-  splashScreen.remove();
-  //displayQuestion01();
+  splashScreen.style.display = "none";
+  //timeStart.textContent = "";
+  countdown();
   displayQuestion();
 
   //use setInterval and in the function minus 1 second from the original count (60 ) at every 1000 milisecond
 }
-//this is the counter for counting the question that should be displayed on the webpage
 
 function displayQuestion() {
-  console.log("Q: " + h2Title + "  " + questions[questionPosition].question);
+  generatedQuestions.style.display = "flex";
+  answer.style.display = "flex";
+  answerContainer.innerHTML = "";
+  ol.innerHTML = "";
   //display title of question
-
+  let h2Title = questions[questionPosition].question;
   title.innerText = h2Title;
-  //title.append(questions[questionPosition].question);
-  //console.log("Q: " + questions[questionPosition].question);
-  //display the options (answers) of the question
-  //get length of options
 
   for (i = 0; i < 4; i++) {
     var answerElementLI = document.createElement("li");
@@ -92,7 +96,7 @@ function displayQuestion() {
     ol.appendChild(answerElementLI);
 
     answerElementLI.addEventListener("click", (event) => {
-      console.log("key pressed: " + event.target.id);
+      //console.log("key pressed: " + event.target.id);
       // console.log("NodeName: ", event.target.nodeName);
       // let keyPressed = event.target.id;
       let chosenAnsValue = event.target.innerText;
@@ -113,6 +117,7 @@ function displayResult(chosenAnsValue) {
   } else {
     result.textContent = "Sorry: Your answer is incorrect";
     result.className = "answerPanel";
+    timeLeft = timeLeft - 10;
     answer.append(result);
     setTimeout(goToNextQuestion, 1500);
   }
@@ -132,21 +137,26 @@ function goToNextQuestion() {
 }
 function displayScore() {
   //clear the page
-  generatedQuestions.remove();
-  answerContainer.remove();
+  generatedQuestions.style.display = "none";
+  answerContainer.style.display = "none";
+
+  scoreBoard.style.display = "block";
+  // scoreTitle.textContent = "";
+  // scoreText.textContent = "";
+  // label.textContent = "";
+  // inputScores.value = "";
+  // submitScoreButton.value = "";
 
   //generate the content
   scoreTitle.textContent = "All Done";
   scoreBoard.append(scoreTitle);
 
-  var scoreText = document.createElement("blockquote");
+  var scoreText = document.getElementById("finalScorePlaceholder");
   scoreText.innerHTML = "Your final score is: " + finalScore;
-  // console.log("Final score: " + finalScore);
   scoreBoard.append(scoreText);
 
   var inputScores = document.createElement("input");
   var label = document.createElement("label");
-  //inputScores.innerHTML = "Enter initials:";
   label.textContent = "Enter your initials: ";
   scoreBoard.append(label);
   //inputScores.name = "highScoreName";
@@ -172,16 +182,20 @@ function handleScoreValues() {
 }
 function displayHighscoreList() {
   //clear the HTML elements
+  document.getElementById("highScoresContainer").style.display = "block";
+  document.getElementById("scoresContainer").style.display = "none";
+  displayScoreTitle.innerHTML = "";
+  scoreElementLI.innerHTML = "";
+  clearScoresButton.value = "";
+  restartQuizButton.value = "";
 
-  var scoreElementLI = document.createElement("li");
-  var clearScoresButton = document.createElement("button");
   var userInitials = localStorage.getItem("userInitials");
   var userScore = localStorage.getItem("yourScore");
-  var restartQuizButton = document.createElement("button");
-  // console.log("user initials: " + userInitials);
-  // console.log("user score: " + userScore);
-  //print the values
-  scoreBoard.remove();
+  // var scoreElementLI = document.createElement("li");
+  // var clearScoresButton = document.createElement("button");
+  // var userInitials = localStorage.getItem("userInitials");
+  // var userScore = localStorage.getItem("yourScore");
+  // var restartQuizButton = document.createElement("button");
 
   displayScoreTitle.textContent = "High Score List";
   scoreElementLI.className = "highscoreList";
@@ -192,53 +206,44 @@ function displayHighscoreList() {
   restartQuizButton.textContent = "Restart Quiz";
   restartQuizButton.className = "submitScoreButton";
   displayScoreContainer.append(restartQuizButton);
-  restartQuizButton.addEventListener("click", restartQuiz);
+  restartQuizButton.addEventListener("click", function () {
+    //hide all elements
+    splashScreen.style.display = "flex";
+    generatedQuestions.style.display = "none";
+    answer.style.display = "none";
+    scoreBoard.style.display = "none;";
+    displayScoreContainer.style.display = "none";
+    timeLeftContainer.style.display = "flex";
+    //reset question count and scores
+    questionPosition = 0;
+    finalScore = 0;
+    timeLeft = 60;
+  });
 
   clearScoresButton.textContent = "Reset Saved Scores";
   clearScoresButton.className = "submitScoreButton";
   displayScoreContainer.append(clearScoresButton);
-  clearScoresButton.addEventListener("click", clearScores);
-
-  function clearScores() {
+  clearScoresButton.addEventListener("click", function () {
     displayScoreOL.textContent = "";
-    return;
-  }
+  });
 }
-function restartQuiz() {
-  //arrayLength = questions.length;
+function countdown() {
+  // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
+  var timeInterval = setInterval(function () {
+    // As long as the `timeLeft` is greater than 1
+    if (timeLeft > 1) {
+      // Set the `textContent` of `timerEl` to show the remaining seconds
+      timeRemaining.textContent = timeLeft + " seconds remaining";
 
-  //console.log("QuizRestarted:");
-  generatedQuestions.remove();
-  generatedQuestions.remove();
-  displayScoreContainer.remove();
-  scoreBoard.remove();
-  var resplashScreenContain = document.getElementById(
-    "re-splashScreenContainer"
-  );
-  var splashScreenTitle = document.getElementById("re-splashTitle");
-  var textPara = document.getElementById("re-text-paragraph");
-  var restartButton = document.createElement("button");
-
-  splashScreenTitle.textContent = "Coding Quiz Challenge";
-  resplashScreenContain.append(splashScreenTitle);
-
-  textPara.textContent =
-    "Try to answer the following code-related questions within the time limit.Incorrect answers will penalise your time by ten 10 seconds";
-  resplashScreenContain.append(textPara);
-
-  restartButton.textContent = "Start";
-  restartButton.className = "submitScoreButton";
-  resplashScreenContain.append(restartButton);
-  restartButton.addEventListener("click", display);
-
-  function display() {
-    console.log("QUIZ HAS RESTARTED++++");
-    questionPosition = 0;
-    finalScore = 0;
-
-    displayQuestion();
-  }
+      // Decrement `timeLeft` by 1
+      timeLeft--;
+    } else if (timeLeft === 1) {
+      // When `timeLeft` is equal to 1, rename to 'second' instead of 'seconds'
+      timeRemaining.textContent = timeLeft + " second remaining";
+      timeLeft--;
+      return;
+    }
+  }, 2000);
 }
-
 // Attaches event listener to button
 splashScreenStartButton.addEventListener("click", startQuiz);

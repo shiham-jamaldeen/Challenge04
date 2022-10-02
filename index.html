@@ -11,14 +11,16 @@
   <body>
     <main>
       <section>
-        <div id="splashScreenContainer" class="questionAreaContainer">
+        <div id="splashScreenContainer" class="splashAreaContainer">
           <h1 id="splashTitle">Coding Quiz Challenge</h1>
-          <blockquote id="text-paragraph">
+          <blockquote id="text-paragraph" class="blockquoteText">
             Try to answer the following code-related questions within the time
             limit. Incorrect answers will penalise your time by ten (10)
             seconds.
           </blockquote>
-          <button class="startButton" id="button-start">Start</button>
+          <p class="centreButton">
+            <button class="startButton" id="button-start">Start</button>
+          </p>
         </div>
       </section>
       <section>
@@ -29,28 +31,24 @@
       </section>
       <section>
         <div id="answerContainer">
-          <p id="results"></p>
+          <p id="results" class="para"></p>
         </div>
       </section>
       <section>
         <div id="scoresContainer">
           <h2 id="scoreTitle"></h2>
+          <p id="finalScorePlaceholder" class="para"></p>
         </div>
       </section>
       <section>
-        <div id="displayScoresContainer">
+        <div id="highScoresContainer">
           <h2 id="highScoresDisplay"></h2>
           <ol id="scoreBoard"></ol>
         </div>
       </section>
-      <section>
-        <div id="re-splashScreenContainer" class="questionAreaContainer">
-          <h1 id="re-splashTitle"></h1>
-          <blockquote id="re-text-paragraph"></blockquote>
-      </section>
     </main>
-    <aside id="timer">
-      <h1>TIMER goes here</h1>
+    <aside id="timerContainer">
+      <h2 id="timeLeftPlaceholder">Time left: 60 seconds</h2>
     </aside>
     <script src="./js/script.js"></script>
   </body>
