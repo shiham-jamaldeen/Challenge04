@@ -112,14 +112,14 @@ function displayResult(chosenAnsValue) {
     result.textContent = "Awsome: You got it correct!";
     result.className = "answerPanel";
     answer.append(result);
-    setTimeout(goToNextQuestion, 3000);
+    setTimeout(goToNextQuestion, 1500);
     finalScore++;
   } else {
     result.textContent = "Sorry: Your answer is incorrect";
     result.className = "answerPanel";
     timeLeft = timeLeft - 10;
     answer.append(result);
-    setTimeout(goToNextQuestion, 3000);
+    setTimeout(goToNextQuestion, 1500);
   }
 }
 
